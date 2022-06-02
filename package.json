@@ -1,0 +1,22 @@
+{
+  "name": "illusionv2",
+  "version": "2.0.0",
+  "description": "Discord Bot illusion for 862 electrical (version 2.0.0)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "C. Michael",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.0",
+    "fs": "^0.0.1-security",
+    "moment": "^2.29.1",
+    "mongoose": "^6.3.4",
+    "node-fetch": "^3.2.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
+}
