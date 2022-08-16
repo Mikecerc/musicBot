@@ -1,0 +1,1 @@
+General purpose discord music bot with youtube search, youtube link, youtube playlist, and spotify playlist support. 
