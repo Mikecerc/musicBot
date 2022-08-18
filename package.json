@@ -22,7 +22,7 @@
     "spotify-uri": "^3.0.2",
     "spotify-web-api-node": "^5.0.2",
     "yt-search": "^2.10.3",
-    "ytdl-core": "^4.11.0"
+    "ytdl-core": "^4.10.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0"
