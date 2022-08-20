@@ -53,7 +53,9 @@ export default class MusicSubscription {
                         await entersState(this.voiceConnection, VoiceConnectionStatus.Connecting, 5_000);
                         // Probably moved voice channel
                     } catch {
-                        this.voiceConnection.destroy();
+                        try {
+                            this.voiceConnection.destroy();
+                        } catch (err) {}
                         // Probably removed from voice channel
                     }
                 } else if (this.voiceConnection.rejoinAttempts < 5) {
