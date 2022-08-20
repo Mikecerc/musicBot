@@ -111,7 +111,9 @@ export default class MusicSubscription {
                         .setURL(newState.resource.metadata.url)
                         .setThumbnail(newState.resource.metadata.thumbnail)
                         .setFooter(newState.resource.metadata.requestedBy);
-                    interaction.channel.send({ embeds: [embed] });
+                    try {
+                        interaction.channel.send({ embeds: [embed] });
+                    } catch (e) {}
                     this.loopNpMsg = true;
                 } else if (!this.loop) {
                     // if loop is disabled
@@ -122,14 +124,18 @@ export default class MusicSubscription {
                         .setURL(newState.resource.metadata.url)
                         .setThumbnail(newState.resource.metadata.thumbnail)
                         .setFooter(newState.resource.metadata.requestedBy);
-                    interaction.channel.send({ embeds: [embed] });
+                    try {
+                        interaction.channel.send({ embeds: [embed] });
+                    } catch (e) {}
                 }
             }
         });
 
         //log audio player errors
         this.audioPlayer.on("error", (error) => {
-            interaction.channel.send("An error has occured");
+            try {
+                interaction.channel.send("An error has occured");
+            } catch (e) {}
             console.warn(error);
         });
         //attach audio player to voice connection
@@ -219,7 +225,9 @@ export default class MusicSubscription {
             }
             // If an error occurred, try the next item of the queue instead
             console.warn(error);
-            interaction.channel.send("There was an error");
+            try {
+                interaction.channel.send("There was an error");
+            } catch (e) {}
             this.queueLock = false;
             return this.processQueue(this.interaction);
         }
