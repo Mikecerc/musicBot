@@ -10,7 +10,7 @@ import {
 } from "@discordjs/voice";
 import { promisify } from "node:util";
 import ytdl from "ytdl-core";
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import Track from "./track";
 import yts from "yt-search";
 const wait = promisify(setTimeout);
@@ -31,7 +31,7 @@ export default class MusicSubscription {
     lastResource: Track;
     interaction: { channel: { send: (arg0: any) => void } };
 
-    constructor(voiceConnection: VoiceConnection, interaction: { channel: { send: (arg0: any) => void } }) {
+    constructor(voiceConnection: VoiceConnection, interaction) {
         this.loop = false;
         this.loopSkipped = false;
         this.voiceConnection = voiceConnection;
@@ -94,7 +94,7 @@ export default class MusicSubscription {
         });
 
         // Configure audio player
-        this.audioPlayer.on("stateChange", (oldState: any, newState: any) => {
+        this.audioPlayer.on("stateChange", async (oldState: any, newState: any) => {
             if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
                 // If the Idle state is entered from a non-Idle state, it means that an audio resource has finished playing.
                 // The queue is then processed to start playing the next track, if one is available.
@@ -112,6 +112,8 @@ export default class MusicSubscription {
                         .setThumbnail(newState.resource.metadata.thumbnail)
                         .setFooter(newState.resource.metadata.requestedBy);
                     try {
+                        const bot = await interaction.guild.members.fetch(interaction.client.user.id);
+                        if (!interaction.channel.permissionsFor(bot).has(PermissionFlagsBits.SendMessages)) return;
                         interaction.channel.send({ embeds: [embed] });
                     } catch (e) {}
                     this.loopNpMsg = true;
@@ -125,6 +127,8 @@ export default class MusicSubscription {
                         .setThumbnail(newState.resource.metadata.thumbnail)
                         .setFooter(newState.resource.metadata.requestedBy);
                     try {
+                        const bot = await interaction.guild.members.fetch(interaction.client.user.id);
+                        if (!interaction.channel.permissionsFor(bot).has(PermissionFlagsBits.SendMessages)) return;
                         interaction.channel.send({ embeds: [embed] });
                     } catch (e) {}
                 }
@@ -132,11 +136,13 @@ export default class MusicSubscription {
         });
 
         //log audio player errors
-        this.audioPlayer.on("error", (error) => {
+        this.audioPlayer.on("error", async (error) => {
+            console.warn(error);
             try {
+                const bot = await interaction.guild.members.fetch(interaction.client.user.id);
+                if (!interaction.channel.permissionsFor(bot).has(PermissionFlagsBits.SendMessages)) return;
                 interaction.channel.send("An error has occured");
             } catch (e) {}
-            console.warn(error);
         });
         //attach audio player to voice connection
         voiceConnection.subscribe(this.audioPlayer);
@@ -164,7 +170,7 @@ export default class MusicSubscription {
     /**
      * Attempts to play a Track from the queue.
      */
-    async processQueue(interaction: { channel: any; user?: any }) {
+    async processQueue(interaction) {
         // If the queue is locked (already being processed), is empty, or the audio player is already playing something, return
         if (this.queueLock || this.audioPlayer.state.status !== AudioPlayerStatus.Idle) {
             return;
@@ -225,11 +231,13 @@ export default class MusicSubscription {
             }
             // If an error occurred, try the next item of the queue instead
             console.warn(error);
+            this.queueLock = false;
+            this.processQueue(this.interaction);
             try {
+                const bot = await interaction.guild.members.fetch(interaction.client.user.id);
+                if (!interaction.channel.permissionsFor(bot).has(PermissionFlagsBits.SendMessages)) return;
                 interaction.channel.send("There was an error");
             } catch (e) {}
-            this.queueLock = false;
-            return this.processQueue(this.interaction);
         }
     }
 }
