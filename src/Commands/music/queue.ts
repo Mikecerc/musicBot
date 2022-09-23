@@ -53,6 +53,12 @@ export default {
                         .setOptions(options)
                         .setPlaceholder("Delete a song")
                 );
+                const moveToTop = new ActionRowBuilder().addComponents(
+                    new SelectMenuBuilder()
+                        .setCustomId("45-10-1")
+                        .setOptions(options)
+                        .setPlaceholder("Move to the top")
+                );
                 const refresh = new ActionRowBuilder().addComponents(
                     new ButtonBuilder().setCustomId(`43-10-1`).setStyle(ButtonStyle.Primary).setLabel("Refresh"),
                     new ButtonBuilder().setCustomId(`44-10-2`).setStyle(ButtonStyle.Danger).setLabel("Scramble")
@@ -60,7 +66,7 @@ export default {
                 if (options.length > 0) {
                     await interaction.followUp({
                         embeds: [embed],
-                        components: [dropdown, refresh],
+                        components: [dropdown, moveToTop, refresh],
                     });
                 } else {
                     await interaction.followUp({ embeds: [embed], components: [refresh] });
@@ -98,7 +104,7 @@ export default {
                     new ButtonBuilder().setCustomId(`40-10-1`).setStyle(ButtonStyle.Secondary).setEmoji("◀️").setDisabled(true),
                     new ButtonBuilder().setCustomId("41-10-1").setStyle(ButtonStyle.Secondary).setEmoji("▶️").setDisabled(false),
                     new ButtonBuilder().setCustomId(`43-10-1`).setStyle(ButtonStyle.Primary).setLabel("Refresh"),
-                    new ButtonBuilder().setCustomId(`44-10-2`).setStyle(ButtonStyle.Danger).setLabel("Scramble")
+                    new ButtonBuilder().setCustomId(`44-10-1`).setStyle(ButtonStyle.Danger).setLabel("Scramble")
                 );
                 const dropdown = new ActionRowBuilder().addComponents(
                     new SelectMenuBuilder()
@@ -108,10 +114,16 @@ export default {
                         .setOptions(options)
                         .setPlaceholder("Delete a song")
                 );
+                const moveToTop = new ActionRowBuilder().addComponents(
+                    new SelectMenuBuilder()
+                        .setCustomId("45-10-1")
+                        .setOptions(options)
+                        .setPlaceholder("Move to the top")
+                );
                 if (options.length > 0) {
                     await interaction.followUp({
                         embeds: [embed],
-                        components: [dropdown, buttons],
+                        components: [dropdown,moveToTop,buttons],
                     });
                 } else {
                     await interaction.followUp({
