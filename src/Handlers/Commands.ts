@@ -3,10 +3,10 @@ import { readdirSync } from "fs";
     //create a blank array for commands
     const commandsArry = [];
     //import all command sub-folders
-    const commandFolders = readdirSync("./build/Commands");
+    const commandFolders = readdirSync("./dist/Commands");
     for (const folder of commandFolders) {
         // filter out js files within each folder
-        const commandFiles = readdirSync(`./build/Commands/${folder}`).filter(
+        const commandFiles = readdirSync(`./dist/Commands/${folder}`).filter(
             (files) => files.endsWith('.js')
         );
         for (const file of commandFiles) {
@@ -41,12 +41,12 @@ import { readdirSync } from "fs";
 */
 export default async (client: any) => {
     const commandsArry = [];
-    const commandFolders = readdirSync("./build/Commands");
+    const commandFolders = readdirSync("./dist/commands");
 
     for (const folder of commandFolders) {
-        const commandFiles = readdirSync(`./build/Commands/${folder}`).filter((files) => files.endsWith(".js"));
+        const commandFiles = readdirSync(`./dist/commands/${folder}`).filter((files) => files.endsWith(".js"));
         for (const file of commandFiles) {
-            const commandFile = await import(`../Commands/${folder}/${file}`);
+            const commandFile = await import(`../commands/${folder}/${file}`);
             const command = commandFile.default;
             await client.commands.set(command.data.name, command);
             commandsArry.push(command.data.toJSON());
