@@ -232,7 +232,6 @@ export default class MusicSubscription {
                 this.loopNpMsg = false;
             }
             // If an error occurred, try the next item of the queue instead
-            console.warn(error);
             this.queueLock = false;
             this.processQueue(this.interaction);
             try {
