@@ -41,6 +41,7 @@ export default class MusicSubscription {
 
         this.voiceConnection.on("stateChange", async (newState: any) => {
             if (newState.status === VoiceConnectionStatus.Disconnected) {
+                console.log("dc ", newState)
                 if (newState.reason === VoiceConnectionDisconnectReason.WebSocketClose && newState.closeCode === 4014) {
                     /**
                      * If the WebSocket closed with a 4014 code, this means that we should not manually attempt to reconnect,
@@ -53,6 +54,7 @@ export default class MusicSubscription {
                         await entersState(this.voiceConnection, VoiceConnectionStatus.Connecting, 5_000);
                         // Probably moved voice channel
                     } catch {
+                        console.error("websocket ", newState);
                         try {
                             this.voiceConnection.destroy();
                         } catch (err) {}
@@ -232,6 +234,7 @@ export default class MusicSubscription {
                 this.loopNpMsg = false;
             }
             // If an error occurred, try the next item of the queue instead
+            console.warn(error);
             this.queueLock = false;
             this.processQueue(this.interaction);
             try {
